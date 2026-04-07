@@ -1,26 +1,44 @@
 import { useEffect, useState } from "react";
-import { getClients } from "../services/api";
+import { getClients, deleteClient } from "../services/api";
 
 export default function ClientList() {
+
   const [clients, setClients] = useState([]);
 
-  useEffect(() => {
-    async function loadClients() {
-      const data = await getClients();
-      setClients(data);
-    }
+  async function loadClients() {
+    const data = await getClients();
+    setClients(data);
+  }
 
-    loadClients();
+  useEffect(() => {
+  async function loadClients() {
+    const data = await getClients();
+    setClients(data);
+  }
+
+  loadClients();
   }, []);
+
+  async function handleDelete(id) {
+    await deleteClient(id);
+    loadClients();
+  }
 
   return (
     <div>
-      <h2>Lista de Clientes</h2>
+      <h2>Clientes</h2>
 
       <ul>
-        {clients.map((client) => (
-          <li key={client.id}>
-            {client.nome} - {client.email}
+        {clients.map(c => (
+          <li key={c.id}>
+            {c.nome} - {c.email}
+
+            <button
+              onClick={() => handleDelete(c.id)}
+            >
+              Excluir
+            </button>
+
           </li>
         ))}
       </ul>
